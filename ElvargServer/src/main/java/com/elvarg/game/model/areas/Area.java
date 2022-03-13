@@ -52,4 +52,8 @@ public abstract class Area {
     public List<Boundary> getBoundaries() {
         return boundaries;
     }
+
+    public String getName() {
+        return this.getClass().getSimpleName();
+    }
 }

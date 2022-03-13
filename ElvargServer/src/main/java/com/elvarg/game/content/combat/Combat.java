@@ -22,9 +22,9 @@ import com.elvarg.util.Stopwatch;
 import com.elvarg.util.timers.TimerKey;
 
 public class Combat {
-    
-    private final Mobile character;
-    private final HitQueue hitQueue;
+
+	private final Mobile character;
+	private final HitQueue hitQueue;
 	private final Map<Player, HitDamageCache> damageMap = new HashMap<>();
 	private final Stopwatch lastAttack = new Stopwatch();
 	private final SecondsTimer poisonImmunityTimer = new SecondsTimer();
@@ -101,6 +101,9 @@ public class Combat {
 			// Follow target
 			character.setFollowing(target);
 
+			// Face target
+			character.setMobileInteraction(target);
+
 			// Check if the character can reach the target before attempting attack
 			if (CombatFactory.canReach(character, method, target)) {
 
@@ -114,11 +117,9 @@ public class Combat {
 				// Make sure attack timer is <= 0
 				if (!character.getTimers().has(TimerKey.COMBAT_ATTACK) || instant) {
 
+
 					// Check if the character can perform the attack
 					if (CombatFactory.canAttack(character, method, target)) {
-
-						// Face target
-						character.setMobileInteraction(target);
 
 						method.start(character, target);
 						PendingHit[] hits = method.hits(character, target);
@@ -131,8 +132,16 @@ public class Combat {
 
 						// Reset attack timer
 						if (!graniteMaulSpecial) {
-						    int speed = method.attackSpeed(character);
+							int speed = method.attackSpeed(character);
 							character.getTimers().register(TimerKey.COMBAT_ATTACK, speed);
+						}
+						instant = false;
+						if (character.isSpecialActivated()) {
+							character.setSpecialActivated(false);
+							if (character.isPlayer()) {
+								Player p = character.getAsPlayer();
+								CombatSpecial.updateBar(p);
+							}
 						}
 					}
 				}

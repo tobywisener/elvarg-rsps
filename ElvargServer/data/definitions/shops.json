@@ -1434,5 +1434,23 @@
             "amount":10
          }
 	  ]
-	}
+    },
+   {
+      "id": 11,
+      "name": "Bakery",
+      "originalStock": [
+      ]
+   },
+   {
+      "id": 12,
+      "name": "Veg Store",
+      "originalStock": [
+      ]
+   },
+   {
+      "id": 13,
+      "name": "Veg Store",
+      "originalStock": [
+      ]
+   }
 ]

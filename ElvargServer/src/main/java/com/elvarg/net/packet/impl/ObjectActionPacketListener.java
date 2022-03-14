@@ -25,7 +25,7 @@ import com.elvarg.game.model.MagicSpellbook;
 import com.elvarg.game.model.Skill;
 import com.elvarg.game.model.areas.impl.CombatRingArea;
 import com.elvarg.game.model.areas.impl.PrivateArea;
-import com.elvarg.game.model.areas.impl.WildernessArea;
+import com.elvarg.game.model.dialogues.entries.impl.StatementDialogue;
 import com.elvarg.game.model.movement.WalkToAction;
 import com.elvarg.game.model.rights.PlayerRights;
 import com.elvarg.game.model.teleportation.TeleportHandler;
@@ -62,6 +62,9 @@ public class ObjectActionPacketListener extends ObjectIdentifiers implements Pac
         }
 
         switch (object.getId()) {
+            case CHEST:
+                StatementDialogue.send(player, "You need a Crystal Key to open this chest.");
+                break;
         case MAGICAL_ANIMATOR:
             ArmorAnimator.animateArmor(player);
             break;
@@ -171,8 +174,8 @@ public class ObjectActionPacketListener extends ObjectIdentifiers implements Pac
      *            The packet containing the object's information.
      */
     private static void secondClick(Player player, GameObject object) {
-        // Check thieving..
         if (StallThieving.init(player, object)) {
+            // Check thieving..
             return;
         }
 
@@ -210,6 +213,11 @@ public class ObjectActionPacketListener extends ObjectIdentifiers implements Pac
 	 *            The packet containing the object's information.
 	 */
 	private static void thirdClick(Player player, GameObject object) {
+        if (StallThieving.handleShop(player, object)) {
+            // Check if this object is a stall with a shop
+            return;
+        }
+
 		switch (object.getId()) {
         case PORTAL_51:
             //DialogueManager.sendStatement(player, "Construction will be avaliable in the future.");

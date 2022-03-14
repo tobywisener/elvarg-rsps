@@ -16,12 +16,16 @@ import com.elvarg.game.model.Graphic;
 import com.elvarg.game.model.GraphicHeight;
 import com.elvarg.game.model.Item;
 import com.elvarg.game.model.Skill;
+import com.elvarg.game.model.container.shop.ShopManager;
+import com.elvarg.game.model.dialogues.entries.impl.StatementDialogue;
 import com.elvarg.game.task.Task;
 import com.elvarg.game.task.TaskManager;
 import com.elvarg.game.task.impl.TimedObjectReplacementTask;
 import com.elvarg.util.ItemIdentifiers;
 import com.elvarg.util.Misc;
 import com.elvarg.util.timers.TimerKey;
+import static com.elvarg.util.ShopIdentifiers.FOOD_SHOP;
+import static com.elvarg.util.ShopIdentifiers.GENERAL_STORE;
 
 /**
  * Handles actions related to the Thieving skill.
@@ -428,51 +432,86 @@ public class Thieving extends ItemIdentifiers {
 		 */
 		public static boolean init(Player player, GameObject object) {
 			Optional<Stall> stall = Stall.get(object.getId());
-			if (stall.isPresent()) {
+			if (!stall.isPresent()) {
+				return false;
+			}
 
-				// Make sure we have the required thieving level..
-				if (player.getSkillManager().getCurrentLevel(Skill.THIEVING) >= stall.get().getReqLevel()) {
-
-					// Make sure we aren't spam clicking..
-					if (player.getClickDelay().elapsed(1000)) {
-
-						// Reset click delay..
-						player.getClickDelay().reset();
-
-						// Face stall..
-						player.setPositionToFace(object.getLocation());
-
-						// Perform animation..
-						player.performAnimation(THIEVING_ANIMATION);
-
-						// Add items..
-						Item item = stall.get().getRewards()[Misc.getRandom(stall.get().getRewards().length - 1)];
-						player.getInventory().add(item.getId(),
-								item.getAmount() > 1 ? Misc.getRandom(item.getAmount()) : 1);
-
-						// Add pet..
-						PetHandler.onSkill(player, Skill.THIEVING);
-
-						// Respawn stall..
-						for (StallDefinition stallDef : stall.get().getStalls()) {
-							if (stallDef.getObjectId() == object.getId()) {
-								if (stallDef.getReplacement().isPresent()) {
-									TaskManager.submit(new TimedObjectReplacementTask(object,
-											new GameObject(stallDef.getReplacement().get(), object.getLocation(),
-													object.getType(), object.getFace(), player.getPrivateArea()),
-											stall.get().getRespawnTicks()));
-								}
-								break;
-							}
-						}
-					}
-				} else {
-					//DialogueManager.sendStatement(player, "You need a Thieving level of at least "
-					//		+ Integer.toString(stall.get().getReqLevel()) + " to do this.");
-				}
+			if (!player.getClickDelay().elapsed(1000)) {
 				return true;
 			}
+
+			if (player.getSkillManager().getCurrentLevel(Skill.THIEVING) < stall.get().getReqLevel()) {
+				// Make sure we have the required thieving level..
+				StatementDialogue.send(player, "You need a Thieving level of at least "
+						+ Integer.toString(stall.get().getReqLevel()) + " to do this.");
+				return true;
+			}
+
+			// Reset click delay..
+			player.getClickDelay().reset();
+
+			// Face stall..
+			player.setPositionToFace(object.getLocation());
+
+			// Perform animation..
+			player.performAnimation(THIEVING_ANIMATION);
+
+			// Add items..
+			Item item = stall.get().getRewards()[Misc.getRandom(stall.get().getRewards().length - 1)];
+			player.getInventory().add(item.getId(),
+					item.getAmount() > 1 ? Misc.getRandom(item.getAmount()) : 1);
+
+			// Add pet..
+			PetHandler.onSkill(player, Skill.THIEVING);
+
+			// Respawn stall..
+			for (StallDefinition stallDef : stall.get().getStalls()) {
+				if (stallDef.getObjectId() == object.getId()) {
+					if (stallDef.getReplacement().isPresent()) {
+						TaskManager.submit(new TimedObjectReplacementTask(object,
+								new GameObject(stallDef.getReplacement().get(), object.getLocation(),
+										object.getType(), object.getFace(), player.getPrivateArea()),
+								stall.get().getRespawnTicks()));
+					}
+					break;
+				}
+			}
 			return false;
+		}
+
+		/**
+		 * Opens a shop associated with a stall (if there is owe)
+		 *
+		 * @author Toby
+		 */
+		public static boolean handleShop(Player player, GameObject object) {
+			Optional<Stall> stall = Stall.get(object.getId());
+			if (!stall.isPresent()) {
+				return false;
+			}
+
+			if (!player.getClickDelay().elapsed(1000)) {
+				return true;
+			}
+
+			Integer shopId = null;
+
+			for (StallDefinition stallDef : stall.get().getStalls()) {
+				if (stallDef.getObjectId() != object.getId()) {
+					continue;
+				}
+
+				shopId = stallDef.getShopId();
+				break;
+			}
+
+			if (shopId != null) {
+				ShopManager.open(player, shopId);
+				return true;
+			}
+
+			StatementDialogue.send(player, "This stall currently doesn't have a shop.");
+			return true;
 		}
 
 		/**
@@ -481,171 +520,183 @@ public class Thieving extends ItemIdentifiers {
 		 * @author Professor Oak
 		 */
 		public enum Stall {
-			BAKERS_STALL(new StallDefinition[] { new StallDefinition(11730, Optional.of(634)), }, 5, 16, 3,
-					new Item(CAKE), new Item(CHOCOLATE_SLICE), new Item(BREAD)), CRAFTING_STALL(
-							new StallDefinition[] { new StallDefinition(4874, Optional.empty()),
-									new StallDefinition(6166, Optional.empty()) },
-							5, 16, 12, new Item(CHISEL), new Item(RING_MOULD), new Item(NECKLACE_MOULD)), MONKEY_STALL(
-									new StallDefinition[] { new StallDefinition(4875, Optional.empty()) }, 5, 16, 12,
-									new Item(BANANA)), MONKEY_GENERAL_STALL(
-											new StallDefinition[] { new StallDefinition(4876, Optional.empty()) }, 5,
-											16, 12, new Item(POT), new Item(TINDERBOX), new Item(HAMMER)), TEA_STALL(
-													new StallDefinition[] { new StallDefinition(635, Optional.of(634)),
-															new StallDefinition(6574, Optional.of(6573)),
-															new StallDefinition(20350, Optional.of(20349)) },
-													5, 16, 12, new Item(CUP_OF_TEA)), SILK_STALL(
-															new StallDefinition[] {
-																	new StallDefinition(11729, Optional.of(634)) },
-															20, 24, 8, new Item(SILK)), WINE_STALL(
-																	new StallDefinition[] { new StallDefinition(14011,
-																			Optional.of(634)) },
-																	22, 27, 27, new Item(JUG_OF_WATER),
-																	new Item(JUG_OF_WINE), new Item(GRAPES),
-																	new Item(EMPTY_JUG),
-																	new Item(BOTTLE_OF_WINE)), SEED_STALL(
-																			new StallDefinition[] { new StallDefinition(
-																					7053, Optional.of(634)), },
-																			27, 10, 30, new Item(POTATO_SEED, 12),
-																			new Item(ONION_SEED, 11),
-																			new Item(CABBAGE_SEED, 10),
-																			new Item(TOMATO_SEED, 9),
-																			new Item(SWEETCORN_SEED, 7),
-																			new Item(STRAWBERRY_SEED, 5),
-																			new Item(WATERMELON_SEED, 3),
-																			new Item(BARLEY_SEED, 5),
-																			new Item(HAMMERSTONE_SEED, 5),
-																			new Item(ASGARNIAN_SEED, 5),
-																			new Item(JUTE_SEED, 5),
-																			new Item(YANILLIAN_SEED, 5),
-																			new Item(KRANDORIAN_SEED, 5),
-																			new Item(WILDBLOOD_SEED, 3),
-																			new Item(MARIGOLD_SEED, 4),
-																			new Item(ROSEMARY_SEED, 4),
-																			new Item(NASTURTIUM_SEED, 4)), FUR_STALL(
-																					new StallDefinition[] {
-																							new StallDefinition(11732,
-																									Optional.of(634)),
-																							new StallDefinition(4278,
-																									Optional.of(634)) },
-																					35, 36, 17,
-																					new Item(
-																							GREY_WOLF_FUR)), FISH_STALL(
-																									new StallDefinition[] {
-																											new StallDefinition(
-																													4277,
-																													Optional.of(
-																															4276)),
-																											new StallDefinition(
-																													4707,
-																													Optional.of(
-																															4276)),
-																											new StallDefinition(
-																													4705,
-																													Optional.of(
-																															4276)) },
-																									42, 42, 17,
-																									new Item(
-																											RAW_SALMON),
-																									new Item(
-																											RAW_TUNA)), CROSSBOW_STALL(
-																													new StallDefinition[] {
-																															new StallDefinition(
-																																	17031,
-																																	Optional.of(
-																																			6984)) },
-																													49,
-																													52,
-																													15,
-																													new Item(
-																															BRONZE_BOLTS,
-																															6),
-																													new Item(
-																															BRONZE_LIMBS),
-																													new Item(
-																															WOODEN_STOCK)), SILVER_STALL(
-																																	new StallDefinition[] {
-																																			new StallDefinition(
-																																					11734,
-																																					Optional.of(
-																																							634)),
-																																			new StallDefinition(
-																																					6164,
-																																					Optional.of(
-																																							6984)), },
-																																	50,
-																																	54,
-																																	50,
-																																	new Item(
-																																			SILVER_ORE)), SPICE_STALL(
-																																					new StallDefinition[] {
-																																							new StallDefinition(
-																																									11733,
-																																									Optional.of(
-																																											634)),
-																																							new StallDefinition(
-																																									6572,
-																																									Optional.of(
-																																											6573)),
-																																							new StallDefinition(
-																																									20348,
-																																									Optional.of(
-																																											20349)), },
-																																					65,
-																																					81,
-																																					133,
-																																					new Item(
-																																							SPICE)), MAGIC_STALL(
-																																									new StallDefinition[] {
-																																											new StallDefinition(
-																																													4877,
-																																													Optional.empty()), },
-																																									65,
-																																									100,
-																																									133,
-																																									new Item(
-																																											AIR_RUNE,
-																																											20),
-																																									new Item(
-																																											WATER_RUNE,
-																																											20),
-																																									new Item(
-																																											EARTH_RUNE,
-																																											20),
-																																									new Item(
-																																											FIRE_RUNE,
-																																											20),
-																																									new Item(
-																																											LAW_RUNE,
-																																											6)), SCIMITAR_STALL(
-																																													new StallDefinition[] {
-																																															new StallDefinition(
-																																																	4878,
-																																																	Optional.empty()) },
-																																													65,
-																																													100,
-																																													133,
-																																													new Item(
-																																															IRON_SCIMITAR)), GEM_STALL(
-																																																	new StallDefinition[] {
-																																																			new StallDefinition(
-																																																					11731,
-																																																					Optional.of(
-																																																							634)),
-																																																			new StallDefinition(
-																																																					6162,
-																																																					Optional.of(
-																																																							6984)), },
-																																																	75,
-																																																	160,
-																																																	133,
-																																																	new Item(
-																																																			UNCUT_SAPPHIRE),
-																																																	new Item(
-																																																			UNCUT_EMERALD),
-																																																	new Item(
-																																																			UNCUT_RUBY),
-																																																	new Item(
-																																																			UNCUT_DIAMOND)),;
+			BAKERS_STALL(new StallDefinition[] {
+					new StallDefinition(11730, Optional.of(634)), }, 5, 16, 3,
+					new Item(CAKE), new Item(CHOCOLATE_SLICE), new Item(BREAD)),
+			CRAFTING_STALL(new StallDefinition[] {
+					new StallDefinition(4874, Optional.empty()),
+					new StallDefinition(6166, Optional.empty())},
+					5, 16, 12, new Item(CHISEL), new Item(RING_MOULD), new Item(NECKLACE_MOULD)),
+			MONKEY_STALL(new StallDefinition[] {
+					new StallDefinition(4875, Optional.empty(), FOOD_SHOP)
+			}, 5, 16, 12, new Item(BANANA)),
+			MONKEY_GENERAL_STALL(
+					new StallDefinition[]{
+							new StallDefinition(4876, Optional.empty(), GENERAL_STORE)
+					}, 5,16, 12, new Item(POT), new Item(TINDERBOX), new Item(HAMMER)),
+			TEA_STALL(new StallDefinition[]{
+					new StallDefinition(635, Optional.of(634)),
+					new StallDefinition(6574, Optional.of(6573)),
+					new StallDefinition(20350, Optional.of(20349))
+			}, 5, 16, 12, new Item(CUP_OF_TEA)),
+			SILK_STALL(new StallDefinition[]{
+					new StallDefinition(11729, Optional.of(634))
+			}, 20, 24, 8, new Item(SILK)),
+			WINE_STALL(new StallDefinition[]{
+					new StallDefinition(14011,
+							Optional.of(634))
+			}, 22, 27, 27, new Item(JUG_OF_WATER), new Item(JUG_OF_WINE), new Item(GRAPES), new Item(EMPTY_JUG), new Item(BOTTLE_OF_WINE)),
+			SEED_STALL(new StallDefinition[]{
+					new StallDefinition(4706, Optional.of(634)),
+			}, 27, 10, 30, new Item(POTATO_SEED, 12),
+					new Item(ONION_SEED, 11),
+					new Item(CABBAGE_SEED, 10),
+					new Item(TOMATO_SEED, 9),
+					new Item(SWEETCORN_SEED, 7),
+					new Item(STRAWBERRY_SEED, 5),
+					new Item(WATERMELON_SEED, 3),
+					new Item(BARLEY_SEED, 5),
+					new Item(HAMMERSTONE_SEED, 5),
+					new Item(ASGARNIAN_SEED, 5),
+					new Item(JUTE_SEED, 5),
+					new Item(YANILLIAN_SEED, 5),
+					new Item(KRANDORIAN_SEED, 5),
+					new Item(WILDBLOOD_SEED, 3),
+					new Item(MARIGOLD_SEED, 4),
+					new Item(ROSEMARY_SEED, 4),
+					new Item(NASTURTIUM_SEED, 4)),
+			FUR_STALL(
+					new StallDefinition[]{
+							new StallDefinition(11732,
+									Optional.of(634)),
+							new StallDefinition(4278,
+									Optional.of(634))},
+					35, 36, 17,
+					new Item(
+							GREY_WOLF_FUR)),
+			FISH_STALL(
+					new StallDefinition[]{
+							new StallDefinition(
+									4277,
+									Optional.of(
+											4276)),
+							new StallDefinition(
+									4707,
+									Optional.of(
+											4276)),
+							new StallDefinition(
+									4705,
+									Optional.of(
+											4276))},
+					42, 42, 17,
+					new Item(
+							RAW_SALMON),
+					new Item(
+							RAW_TUNA)),
+			CROSSBOW_STALL(
+					new StallDefinition[]{
+							new StallDefinition(
+									17031,
+									Optional.of(
+											6984))},
+					49,
+					52,
+					15,
+					new Item(
+							BRONZE_BOLTS,
+							6),
+					new Item(
+							BRONZE_LIMBS),
+					new Item(
+							WOODEN_STOCK)),
+			SILVER_STALL(
+					new StallDefinition[]{
+							new StallDefinition(
+									11734,
+									Optional.of(
+											634)),
+							new StallDefinition(
+									6164,
+									Optional.of(
+											6984)),},
+					50,
+					54,
+					50,
+					new Item(SILVER_ORE)),
+			SPICE_STALL(
+					new StallDefinition[]{
+							new StallDefinition(
+									11733,
+									Optional.of(
+											634)),
+							new StallDefinition(
+									6572,
+									Optional.of(
+											6573)),
+							new StallDefinition(
+									20348,
+									Optional.of(
+											20349)),},
+					65,
+					81,
+					133,
+					new Item(
+							SPICE)),
+			MAGIC_STALL(
+					new StallDefinition[]{
+							new StallDefinition(
+									4877,
+									Optional.empty()),},
+					65,
+					100,
+					133,
+					new Item(
+							AIR_RUNE,
+							20),
+					new Item(
+							WATER_RUNE,
+							20),
+					new Item(
+							EARTH_RUNE,
+							20),
+					new Item(
+							FIRE_RUNE,
+							20),
+					new Item(
+							LAW_RUNE,
+							6)),
+			SCIMITAR_STALL(
+					new StallDefinition[]{
+							new StallDefinition(
+									4878,
+									Optional.empty())},
+					65,
+					100,
+					133,
+					new Item(
+							IRON_SCIMITAR)),
+			GEM_STALL(
+					new StallDefinition[]{
+							new StallDefinition(
+									11731,
+									Optional.of(
+											634)),
+							new StallDefinition(
+									6162,
+									Optional.of(
+											6984)),},
+					75,
+					160,
+					133,
+					new Item(
+							UNCUT_SAPPHIRE),
+					new Item(
+							UNCUT_EMERALD),
+					new Item(
+							UNCUT_RUBY),
+					new Item(
+							UNCUT_DIAMOND)),
+			;
 
 			private static Map<Integer, Stall> map = new HashMap<Integer, Stall>();
 
@@ -712,9 +763,20 @@ public class Thieving extends ItemIdentifiers {
 			 */
 			private final Optional<Integer> replacement;
 
+			/**
+			 * The shop to open for this stall (optional).
+			 */
+			private Integer shopId;
+
 			public StallDefinition(int objectId, Optional<Integer> replacement) {
 				this.objectId = objectId;
 				this.replacement = replacement;
+			}
+
+			public StallDefinition(int objectId, Optional<Integer> replacement, Integer shopId) {
+				this.objectId = objectId;
+				this.replacement = replacement;
+				this.shopId = shopId;
 			}
 
 			public int getObjectId() {
@@ -723,6 +785,10 @@ public class Thieving extends ItemIdentifiers {
 
 			public Optional<Integer> getReplacement() {
 				return replacement;
+			}
+
+			public Integer getShopId() {
+				return shopId;
 			}
 		}
 	}

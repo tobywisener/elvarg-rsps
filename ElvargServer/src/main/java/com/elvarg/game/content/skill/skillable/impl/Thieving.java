@@ -24,8 +24,7 @@ import com.elvarg.game.task.impl.TimedObjectReplacementTask;
 import com.elvarg.util.ItemIdentifiers;
 import com.elvarg.util.Misc;
 import com.elvarg.util.timers.TimerKey;
-import static com.elvarg.util.ShopIdentifiers.FOOD_SHOP;
-import static com.elvarg.util.ShopIdentifiers.GENERAL_STORE;
+import static com.elvarg.util.ShopIdentifiers.*;
 
 /**
  * Handles actions related to the Thieving skill.
@@ -424,6 +423,20 @@ public class Thieving extends ItemIdentifiers {
 	public static final class StallThieving {
 
 		/**
+		 * Determines the chance of failure. method.
+		 *
+		 * @param player
+		 *            The entity who is urging to reach for the pocket.
+		 * @return the result of chance.
+		 */
+		private static boolean isSuccessful(Player player, Stall stall) {
+			int base = 4;
+			short factor = (short) Misc.getRandom(player.getSkillManager().getCurrentLevel(Skill.THIEVING) + base);
+			short fluke = (short) Misc.getRandom(stall.getReqLevel());
+			return factor > fluke;
+		}
+
+		/**
 		 * Checks if we're attempting to steal from a stall based on the clicked object.
 		 *
 		 * @param player
@@ -447,6 +460,11 @@ public class Thieving extends ItemIdentifiers {
 				return true;
 			}
 
+			if (player.getTimers().has(TimerKey.STUN)) {
+				player.getPacketSender().sendMessage("You're currently stunned!");
+				return true;
+			}
+
 			// Reset click delay..
 			player.getClickDelay().reset();
 
@@ -456,10 +474,21 @@ public class Thieving extends ItemIdentifiers {
 			// Perform animation..
 			player.performAnimation(THIEVING_ANIMATION);
 
+			if (!isSuccessful(player, stall.get())) {
+				player.getPacketSender().sendMessage("You get caught stealing from the stall.");
+				CombatFactory.stun(player, 5, true);
+				player.getCombat().getHitQueue()
+						.addPendingDamage(new HitDamage(3, HitMask.RED));
+				return true;
+			}
+
 			// Add items..
 			Item item = stall.get().getRewards()[Misc.getRandom(stall.get().getRewards().length - 1)];
 			player.getInventory().add(item.getId(),
 					item.getAmount() > 1 ? Misc.getRandom(item.getAmount()) : 1);
+
+			// Add exp...
+			player.getSkillManager().addExperience(Skill.THIEVING, stall.get().getExp());
 
 			// Add pet..
 			PetHandler.onSkill(player, Skill.THIEVING);
@@ -521,7 +550,8 @@ public class Thieving extends ItemIdentifiers {
 		 */
 		public enum Stall {
 			BAKERS_STALL(new StallDefinition[] {
-					new StallDefinition(11730, Optional.of(634)), }, 5, 16, 3,
+					new StallDefinition(11730, Optional.of(634), BAKERY_SHOP),
+			}, 5, 16, 3,
 					new Item(CAKE), new Item(CHOCOLATE_SLICE), new Item(BREAD)),
 			CRAFTING_STALL(new StallDefinition[] {
 					new StallDefinition(4874, Optional.empty()),
@@ -535,20 +565,23 @@ public class Thieving extends ItemIdentifiers {
 							new StallDefinition(4876, Optional.empty(), GENERAL_STORE)
 					}, 5,16, 12, new Item(POT), new Item(TINDERBOX), new Item(HAMMER)),
 			TEA_STALL(new StallDefinition[]{
-					new StallDefinition(635, Optional.of(634)),
+					new StallDefinition(635, Optional.of(634), TEA_SHOP),
 					new StallDefinition(6574, Optional.of(6573)),
 					new StallDefinition(20350, Optional.of(20349))
 			}, 5, 16, 12, new Item(CUP_OF_TEA)),
 			SILK_STALL(new StallDefinition[]{
-					new StallDefinition(11729, Optional.of(634))
+					new StallDefinition(11729, Optional.of(634), CLOTHES_SILK_SHOP)
 			}, 20, 24, 8, new Item(SILK)),
 			WINE_STALL(new StallDefinition[]{
 					new StallDefinition(14011,
 							Optional.of(634))
 			}, 22, 27, 27, new Item(JUG_OF_WATER), new Item(JUG_OF_WINE), new Item(GRAPES), new Item(EMPTY_JUG), new Item(BOTTLE_OF_WINE)),
 			SEED_STALL(new StallDefinition[]{
-					new StallDefinition(4706, Optional.of(634)),
+					new StallDefinition(4706, Optional.of(634), VEG_SHOP),
 			}, 27, 10, 30, new Item(POTATO_SEED, 12),
+					new Item(CABBAGE), new Item(CABBAGE), new Item(CABBAGE), new Item(CABBAGE), new Item(CABBAGE),
+					new Item(POTATO), new Item(POTATO), new Item(POTATO),
+					new Item(ONION), new Item(ONION), new Item(ONION), new Item(ONION), new Item(ONION),
 					new Item(ONION_SEED, 11),
 					new Item(CABBAGE_SEED, 10),
 					new Item(TOMATO_SEED, 9),
@@ -565,34 +598,19 @@ public class Thieving extends ItemIdentifiers {
 					new Item(MARIGOLD_SEED, 4),
 					new Item(ROSEMARY_SEED, 4),
 					new Item(NASTURTIUM_SEED, 4)),
-			FUR_STALL(
-					new StallDefinition[]{
-							new StallDefinition(11732,
-									Optional.of(634)),
-							new StallDefinition(4278,
-									Optional.of(634))},
+			FUR_STALL(new StallDefinition[]{
+							new StallDefinition(11732, Optional.of(634), FUR_SHOP),
+							new StallDefinition(4278, Optional.of(634))},
 					35, 36, 17,
-					new Item(
-							GREY_WOLF_FUR)),
-			FISH_STALL(
-					new StallDefinition[]{
-							new StallDefinition(
-									4277,
-									Optional.of(
-											4276)),
-							new StallDefinition(
-									4707,
-									Optional.of(
-											4276)),
-							new StallDefinition(
-									4705,
-									Optional.of(
-											4276))},
+					new Item(GREY_WOLF_FUR)),
+			FISH_STALL(new StallDefinition[]{
+							new StallDefinition(4277,Optional.of(4276)),
+							new StallDefinition(4707,Optional.of(4276)),
+							new StallDefinition(4705,Optional.of(4276), FISH_SHOP)
+			},
 					42, 42, 17,
-					new Item(
-							RAW_SALMON),
-					new Item(
-							RAW_TUNA)),
+					new Item(RAW_SALMON),
+					new Item(RAW_TUNA)),
 			CROSSBOW_STALL(
 					new StallDefinition[]{
 							new StallDefinition(
@@ -642,39 +660,19 @@ public class Thieving extends ItemIdentifiers {
 					133,
 					new Item(
 							SPICE)),
-			MAGIC_STALL(
-					new StallDefinition[]{
-							new StallDefinition(
-									4877,
-									Optional.empty()),},
-					65,
-					100,
-					133,
-					new Item(
-							AIR_RUNE,
-							20),
-					new Item(
-							WATER_RUNE,
-							20),
-					new Item(
-							EARTH_RUNE,
-							20),
-					new Item(
-							FIRE_RUNE,
-							20),
-					new Item(
-							LAW_RUNE,
-							6)),
-			SCIMITAR_STALL(
-					new StallDefinition[]{
-							new StallDefinition(
-									4878,
-									Optional.empty())},
-					65,
-					100,
-					133,
-					new Item(
-							IRON_SCIMITAR)),
+			MAGIC_STALL(new StallDefinition[]{
+							new StallDefinition(4877,Optional.empty(), MAGE_RUNES_SHOP),
+			},
+					65, 100, 133,
+					new Item(AIR_RUNE, 20),
+					new Item(WATER_RUNE, 20),
+					new Item(EARTH_RUNE, 20),
+					new Item(FIRE_RUNE, 20),
+					new Item(LAW_RUNE, 6)),
+			SCIMITAR_STALL(new StallDefinition[]{
+					new StallDefinition(4878,Optional.empty(), ARMOURY_SHOP)},
+					65,100,133,
+					new Item(IRON_SCIMITAR)),
 			GEM_STALL(
 					new StallDefinition[]{
 							new StallDefinition(

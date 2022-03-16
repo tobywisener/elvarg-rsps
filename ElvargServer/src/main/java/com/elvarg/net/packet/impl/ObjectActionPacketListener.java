@@ -1,6 +1,7 @@
 package com.elvarg.net.packet.impl;
 
 import com.elvarg.Server;
+import com.elvarg.game.collision.Region;
 import com.elvarg.game.collision.RegionManager;
 import com.elvarg.game.content.ArmorAnimator;
 import com.elvarg.game.content.minigames.FightCaves;
@@ -16,6 +17,7 @@ import com.elvarg.game.entity.impl.object.GameObject;
 import com.elvarg.game.entity.impl.object.LadderHandler;
 import com.elvarg.game.entity.impl.object.LadderHandler.Ladders;
 import com.elvarg.game.entity.impl.object.MapObjects;
+import com.elvarg.game.entity.impl.object.ObjectManager;
 import com.elvarg.game.entity.impl.player.Player;
 import com.elvarg.game.model.Animation;
 import com.elvarg.game.model.ForceMovement;
@@ -30,13 +32,18 @@ import com.elvarg.game.model.movement.WalkToAction;
 import com.elvarg.game.model.rights.PlayerRights;
 import com.elvarg.game.model.teleportation.TeleportHandler;
 import com.elvarg.game.model.teleportation.TeleportType;
+import com.elvarg.game.task.Task;
 import com.elvarg.game.task.TaskManager;
 import com.elvarg.game.task.impl.ForceMovementTask;
+import com.elvarg.game.task.impl.TimedObjectReplacementTask;
 import com.elvarg.net.packet.Packet;
 import com.elvarg.net.packet.PacketConstants;
 import com.elvarg.net.packet.PacketExecutor;
 import com.elvarg.util.ObjectIdentifiers;
 import org.apache.commons.lang.ArrayUtils;
+
+import static com.elvarg.game.entity.impl.object.ObjectManager.OperationType.DESPAWN;
+import static com.elvarg.game.entity.impl.object.ObjectManager.OperationType.SPAWN;
 
 
 /**
@@ -56,6 +63,41 @@ public class ObjectActionPacketListener extends ObjectIdentifiers implements Pac
 	 *            The packet containing the object's information.
 	 */
     private static void firstClick(Player player, GameObject object) {
+        // DoorHandler
+        if (object.getDefinition().getName() != null && object.getDefinition().getName().contains("Door") ) {
+            final int[][] openOffset = new int[][] { new int[] { -1, 0 }, new int[] { 0, 1 }, new int[] { 1, 0 }, new int[] { 0, -1 },
+                    new int[] { 0, -1 } };
+            final int[][] closeOffset = new int[][] { new int[] { 1, 0 }, new int[] { 1, 0 }, new int[] { 0, 1 }, new int[] { -1, 0 },
+                    new int[] { 0, 1 } };
+            /* check if its an open or closed door */
+            boolean open = object.getDefinition().interactions[0].contains("Open");
+
+            /* gets offset coords based on door face */
+            int[] offset = open? openOffset[object.getFace()] :closeOffset[object.getFace()] ;
+            /* adjust door direction based on if it needs to be opened or closed */
+            int face = open? object.getFace() + 1 : object.getFace() - 1;
+
+            Location loc =  new Location( object.getLocation().getX() + offset[0],object.getLocation().getY() + offset[1]   , object.getLocation().getZ());
+            GameObject obj = new GameObject(open? object.getId() + 1 : object.getId() - 1, loc, object.getType(), face , null);
+
+            /* spawns/despawns doors accordingly */
+
+            if (open) {
+                ObjectManager.register(new GameObject(-1, object.getLocation(), 0, 0, object.getPrivateArea()), true);
+                ObjectManager.register(new GameObject(-1, loc, object.getType(), object.getFace(), object.getPrivateArea()), true);
+
+            }
+
+            ObjectManager.deregister(object, true);
+            ObjectManager.register(obj, true);
+
+
+
+
+
+            return;
+        }
+
         // Skills..
         if (player.getSkillManager().startSkillable(object)) {
             return;
@@ -288,8 +330,8 @@ public class ObjectActionPacketListener extends ObjectIdentifiers implements Pac
 
                     return;
                 }
-
                 switch (clickType) {
+
                     case 1 -> firstClick(player, object);
                     case 2 -> secondClick(player, object);
                     case 3 -> thirdClick(player, object);

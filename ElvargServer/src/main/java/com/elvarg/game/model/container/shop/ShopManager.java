@@ -553,37 +553,12 @@ public class ShopManager extends ShopIdentifiers {
      * @return
      */
     public static boolean buysItems(Shop shop, int itemId) {
-
-        // Disabling selling items to a shop
-        /*if (shop.getId() == PVP_SHOP) {
-			return false;
-		}*/
-
-        // Disabling selling certain items to a shop
-		/*if (shop.getId() == PVP_SHOP) {
-			switch (itemId) {
-			case ItemIdentifiers.HEAVY_BALLISTA:
-				return false;
-			}
-		}*/
-
-        // Disable selling a specific item to any shop
-		/*switch (itemId) {
-		case ItemIdentifiers.HEAVY_BALLISTA:
-			return false;
-		}*/
-
         if (shop.getId() == GENERAL_STORE) {
             return true;
         }
 
-        // Makes sure the item we're trying to sell already exists
-        // in the shop.
-        if (shop.getAmount(itemId, true) >= 1) {
-            return true;
-        }
-
-        return false;
+        // Makes sure the item we're trying to sell already exists in the shop.
+        return shop.hasItem(itemId, true);
     }
 
     /**

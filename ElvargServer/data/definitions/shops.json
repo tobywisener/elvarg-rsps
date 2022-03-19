@@ -10,6 +10,10 @@
       "name": "Food And Points",
       "originalStock":[
          {
+            "id": 1963,
+            "amount": 0
+         },
+         {
             "id":2440,
             "amount":2000000000
          },
@@ -1434,5 +1438,59 @@
             "amount":10
          }
 	  ]
-	}
+    },
+   {
+      "id": 11,
+      "name": "Bakery",
+      "originalStock": [
+         {
+            "id":2309,
+            "amount":0
+         },
+         {
+            "id":1901,
+            "amount":0
+         },
+         {
+            "id":1891,
+            "amount":0
+         }
+      ]
+   },
+   {
+      "id": 12,
+      "name": "Veg Store",
+      "originalStock": [
+      ]
+   },
+   {
+      "id": 13,
+      "name": "Fish Store",
+      "originalStock": [
+      ]
+   },
+   {
+      "id": 14,
+      "name": "Clothing/Silk Store",
+      "originalStock": [
+      ]
+   },
+   {
+      "id": 15,
+      "name": "Armoury Store",
+      "originalStock": [
+      ]
+   },
+   {
+      "id": 16,
+      "name": "Fur Store",
+      "originalStock": [
+      ]
+   },
+   {
+      "id": 17,
+      "name": "Tea Store",
+      "originalStock": [
+      ]
+   }
 ]

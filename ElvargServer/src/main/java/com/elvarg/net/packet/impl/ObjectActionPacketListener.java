@@ -1,6 +1,7 @@
 package com.elvarg.net.packet.impl;
 
 import com.elvarg.Server;
+import com.elvarg.game.World;
 import com.elvarg.game.collision.RegionManager;
 import com.elvarg.game.content.ArmorAnimator;
 import com.elvarg.game.content.minigames.FightCaves;
@@ -30,11 +31,14 @@ import com.elvarg.game.model.movement.WalkToAction;
 import com.elvarg.game.model.rights.PlayerRights;
 import com.elvarg.game.model.teleportation.TeleportHandler;
 import com.elvarg.game.model.teleportation.TeleportType;
+import com.elvarg.game.task.Task;
 import com.elvarg.game.task.TaskManager;
 import com.elvarg.game.task.impl.ForceMovementTask;
+import com.elvarg.game.task.impl.TimedObjectReplacementTask;
 import com.elvarg.net.packet.Packet;
 import com.elvarg.net.packet.PacketConstants;
 import com.elvarg.net.packet.PacketExecutor;
+import com.elvarg.util.Misc;
 import com.elvarg.util.ObjectIdentifiers;
 import org.apache.commons.lang.ArrayUtils;
 
@@ -177,6 +181,22 @@ public class ObjectActionPacketListener extends ObjectIdentifiers implements Pac
         }
 
         switch (object.getId()) {
+            case FLAX:
+            case FLAX_2:
+            case FLAX_3:
+            case FLAX_4:
+            case FLAX_5:
+                TaskManager.submit(new Task(1, false) {
+                    public void execute() {
+                        TaskManager.submit(new TimedObjectReplacementTask(object, new GameObject(-1, object.getLocation(), 11, 3, player.getPrivateArea()), 15));
+                        player.getInventory().add(1779,1);
+                        stop();
+                    }
+
+
+                });
+                player.performAnimation(new Animation(827));
+                break;
         case PORTAL_51:
             //DialogueManager.sendStatement(player, "Construction will be avaliable in the future.");
             break;

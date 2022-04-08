@@ -106,6 +106,8 @@ public class Cooking extends ItemCreationSkillable {
      * Data for the cooking skill.
      */
     public static enum Cookable {
+        BEEF(2132, 2142, 2146, 1, 30, 33, "beef"),
+        CHICKEN(2138, 2140, 2144, 1, 30, 33, "chicken"),
         SHRIMP(317, 315, 7954, 1, 30, 33, "shrimp"),
         ANCHOVIES(321, 319, 323, 1, 30, 34, "anchovies"),
         TROUT(335, 333, 343, 15, 70, 50, "trout"),

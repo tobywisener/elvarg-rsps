@@ -10,6 +10,7 @@ import com.elvarg.game.content.skill.skillable.impl.Thieving.Pickpocketing;
 import com.elvarg.game.entity.impl.npc.NPC;
 import com.elvarg.game.entity.impl.player.Player;
 import com.elvarg.game.model.container.shop.ShopManager;
+import com.elvarg.game.model.dialogues.builders.impl.ManDialogue;
 import com.elvarg.game.model.dialogues.builders.impl.NieveDialogue;
 import com.elvarg.game.model.movement.WalkToAction;
 import com.elvarg.game.model.rights.PlayerRights;
@@ -78,6 +79,14 @@ public class NPCOptionPacketListener extends NpcIdentifiers implements PacketExe
 				}
 
 				switch (npc.getId()) {
+					case MAN:
+					case MAN_2:
+					case MAN_3:
+					case MAN_4:
+					case MAN_5:
+					case MAN_6:
+						player.getDialogueManager().start(new ManDialogue(npc.getId()));
+						break;
 					case FISHING_SPOT_10: // cage and harpoon
 						player.getSkillManager().startSkillable(new Fishing(npc, FishingTool.LOBSTER_POT));
 						break;

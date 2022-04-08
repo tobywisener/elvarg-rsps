@@ -324,7 +324,7 @@ public class Thieving extends ItemIdentifiers {
 																					new Item(LANTADYME_SEED, 1),
 																					new Item(DWARF_WEED_SEED, 1),
 																					new Item(TORSTOL_SEED, 1), },
-																			3257, 3258, 5832), GUARD(40, 47, 5, 2,
+																			3257, 3086, 3087, 3258, 5832), GUARD(40, 47, 5, 2,
 																					new Item[] { new Item(COINS, 30) },
 																					1546, 1547, 1548, 1549, 1550, 3010,
 																					3011, 3094, 3245, 3267, 3268, 3269,

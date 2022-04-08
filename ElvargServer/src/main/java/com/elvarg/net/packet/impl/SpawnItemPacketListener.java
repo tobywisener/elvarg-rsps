@@ -25,7 +25,7 @@ public class SpawnItemPacketListener implements PacketExecutor {
         }
 
         // Check if player busy..
-        if (player.busy() || player.getArea().canSpawn()) {
+        if (player.busy() || (player.getArea() != null && player.getArea().canSpawn())) {
             player.getPacketSender().sendMessage("You cannot spawn items right now.");
             return;
         }

@@ -379,7 +379,8 @@ public final class Player extends Mob {
         }
 
         if (cached) {
-            return null;
+            // Tobias: Player chat heads don't cache properly so generate them every time for now
+            //return null;
         }
 
         Model[] headModels = new Model[12];

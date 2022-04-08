@@ -149,15 +149,18 @@ public class UseItemPacketListener extends ItemIdentifiers implements PacketExec
 
         //Handle object..
         switch (object.getId()) {
-            case ObjectIdentifiers.STOVE_4: //Edgeville Stove
-            case ObjectIdentifiers.FIRE_5: //Player-made Fire
-            case ObjectIdentifiers.FIRE_23: //Barb village fire
+            case ObjectIdentifiers.COOKING_RANGE:
+            case ObjectIdentifiers.STOVE_4:
+            case ObjectIdentifiers.FIRE_5:
+            case ObjectIdentifiers.FIRE_23:
+            case ObjectIdentifiers.FIRE_27:
                 //Handle cooking on objects..
                 Optional<Cookable> cookable = Cookable.getForItem(item.getId());
-                if (cookable.isPresent()) {                    
-                    player.getPacketSender().sendCreationMenu(new CreationMenu("How many would you like to cook?", Arrays.asList(cookable.get().getCookedItem()), (productId, amount) -> {
-                        player.getSkillManager().startSkillable(new Cooking(object, cookable.get(), amount));
-                    }));
+                if (cookable.isPresent()) {
+                    player.getSkillManager().startSkillable(new Cooking(object, cookable.get(), 28));
+//                    player.getPacketSender().sendCreationMenu(new CreationMenu("How many would you like to cook?", Arrays.asList(cookable.get().getCookedItem()), (productId, amount) -> {
+//                        player.getSkillManager().startSkillable(new Cooking(object, cookable.get(), amount));
+//                    }));
                     return;
                 }
                 //Handle bonfires..

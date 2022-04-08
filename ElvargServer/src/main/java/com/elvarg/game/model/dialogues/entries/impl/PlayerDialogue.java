@@ -19,21 +19,28 @@ public class PlayerDialogue extends Dialogue {
     }
 
     public PlayerDialogue(int index, String text) {
-        this(index, text, DialogueExpression.CALM);
+        this(index, text, DialogueExpression.HAPPY);
     }
 
     @Override
     public void send(Player player) {
         send(player, text, expression);
     }
-    
+
+    private static final int[] PLAYER_DIALOGUE_ID = {
+            971,
+            976,
+            982,
+            989
+    };
+
     public static void send(Player player, String text, DialogueExpression expression) {
         String[] lines = Misc.wrapText(text, 53);
         int length = lines.length;
         if (length > 5) {
             length = 5;
         }
-        int startDialogueChildId = CHATBOX_INTERFACES[length - 1];
+        int startDialogueChildId = PLAYER_DIALOGUE_ID[length - 1];
         int headChildId = startDialogueChildId - 2;
         player.getPacketSender().sendPlayerHeadOnInterface(headChildId);
         player.getPacketSender().sendInterfaceAnimation(headChildId, expression.getExpression());

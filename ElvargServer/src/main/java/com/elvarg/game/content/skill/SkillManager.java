@@ -224,7 +224,7 @@ public class SkillManager {
 			int level = newLevel - startingLevel;
 			String skillName = Misc.ucFirst(skill.toString().toLowerCase());
 			skills.maxLevel[skill.ordinal()] += level;
-			stopSkillable(); // Stop skilling on level up like osrs
+			//stopSkillable(); // Stop skilling on level up like osrs
 			setCurrentLevel(skill, skills.maxLevel[skill.ordinal()]);
 			player.getPacketSender().sendInterfaceRemoval();
 			player.getPacketSender().sendString(4268, "Congratulations! You have achieved a " + skillName + " level!");

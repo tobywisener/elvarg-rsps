@@ -9,6 +9,10 @@ import com.runescape.entity.model.Model;
 import com.runescape.io.Buffer;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 public final class ObjectDefinition {
 
@@ -88,6 +92,13 @@ public final class ObjectDefinition {
         objectDef.type = id;
         objectDef.reset();
         objectDef.readValues(stream);
+
+        if (objectDef.interactions != null &&
+                (Objects.equals(objectDef.interactions[1], "Steal from") ||
+                        Objects.equals(objectDef.interactions[1], "Steal-from"))) {
+            objectDef.interactions[2] = "Open Shop";
+        }
+
         if (objectDef.type > 14500) {
 			if (objectDef.delayShading) {
 				objectDef.delayShading = false;

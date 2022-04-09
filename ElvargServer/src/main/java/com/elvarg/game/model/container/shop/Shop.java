@@ -105,6 +105,25 @@ public class Shop {
         return (amount >= MAX_SHOP_ITEMS);
     }
 
+    public boolean hasItem(int itemId, boolean fromOriginalStock) {
+        if (!fromOriginalStock) {
+            for (Item item : currentStock) {
+                if (item == null)
+                    continue;
+                if (item.getId() == itemId) {
+                    return true;
+                }
+            }
+        } else {
+            for (Item item : originalStock) {
+                if (item.getId() == itemId) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public int getAmount(int itemId, boolean fromOriginalStock) {
         if (!fromOriginalStock) {
             for (Item item : currentStock) {

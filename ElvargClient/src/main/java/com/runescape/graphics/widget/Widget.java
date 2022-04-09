@@ -3632,7 +3632,8 @@ public class Widget {
 			model = null;
 		}
 
-		if (model != null) {
+		if (model != null && type != 3) {
+			// Tobias: Player chat heads (3) don't cache properly so dont add them to models for now
 			models.put(model, (type << 16) + mobId);
 		}
 

@@ -138,25 +138,34 @@ public class Food {
 		 * Fish food types players can get by fishing or purchasing from other entities.
 		 */
 		KEBAB(new Item(1971), 4), CHEESE(new Item(1985), 4), CAKE(new Item(1891), 5), SECOND_CAKE_SLICE(new Item(1893),
-				5), THIRD_CAKE_SLICE(new Item(1895), 5), BANDAGES(new Item(14640), 12), JANGERBERRIES(new Item(247),
-						2), WORM_CRUNCHIES(new Item(2205), 7), EDIBLE_SEAWEED(new Item(403), 4), ANCHOVIES(
+				5),
+		THIRD_CAKE_SLICE(new Item(1895), 5), BANDAGES(new Item(14640), 12), JANGERBERRIES(new Item(247),
+						2),
+		WORM_CRUNCHIES(new Item(2205), 7), EDIBLE_SEAWEED(new Item(403), 4), ANCHOVIES(
 								new Item(319),
-								1), SHRIMPS(new Item(315), 3), SARDINE(new Item(325), 4), COD(new Item(339), 7), TROUT(
+								1),
+		SHRIMPS(new Item(315), 3), SARDINE(new Item(325), 4), COD(new Item(339), 7), TROUT(
 										new Item(333),
-										7), PIKE(new Item(351), 8), SALMON(new Item(329), 9), TUNA(new Item(361),
+										7),
+		PIKE(new Item(351), 8), SALMON(new Item(329), 9), TUNA(new Item(361),
 												10), LOBSTER(new Item(379), 12), BASS(new Item(365), 13), SWORDFISH(
 														new Item(373),
-														14), MEAT_PIZZA(new Item(2293), 14), MONKFISH(new Item(7946),
+														14),
+		MEAT_PIZZA(new Item(2293), 14), MONKFISH(new Item(7946),
 																16), SHARK(new Item(385), 20), SEA_TURTLE(new Item(397),
-																		21), DARK_CRAB(new Item(11936), 22), MANTA_RAY(new Item(391), 22), KARAMBWAN(
+																		21),
+		DARK_CRAB(new Item(11936), 22), MANTA_RAY(new Item(391), 22), KARAMBWAN(
 																				new Item(3144),
-																				18), ANGLERFISH(new Item(13441), 22),
+																				18),
+		ANGLERFISH(new Item(13441), 22),
+
 		/*
 		 * Baked goods food types a player can make with the cooking skill.
 		 */
-		POTATO(new Item(1942), 1), BAKED_POTATO(new Item(6701), 4), POTATO_WITH_BUTTER(new Item(6703),
-				14), CHILLI_POTATO(new Item(7054), 14), EGG_POTATO(new Item(7056), 16), POTATO_WITH_CHEESE(
-						new Item(6705), 16), MUSHROOM_POTATO(new Item(7058), 20), TUNA_POTATO(new Item(7060), 20),
+
+		MEAT(new Item(2142), 3), CHICKEN(new Item(2140), 3), POTATO(new Item(1942), 1), BAKED_POTATO(new Item(6701), 4), POTATO_WITH_BUTTER(new Item(6703), 14),
+		CHILLI_POTATO(new Item(7054), 14), EGG_POTATO(new Item(7056), 16), POTATO_WITH_CHEESE(new Item(6705), 16),
+		MUSHROOM_POTATO(new Item(7058), 20), TUNA_POTATO(new Item(7060), 20), BREAD(new Item(2309), 5), CHOCOLATE_SLICE(new Item(1901), 5),
 
 		/*
 		 * Fruit food types which a player can get by picking from certain trees or

@@ -14,4 +14,11 @@ public class ShopIdentifiers {
     public static final int TOOL_SHOP = 9;
 
     public static final int POINTS_SHOP = 10;
+    public static final int BAKERY_SHOP = 11;
+    public static final int VEG_SHOP = 12;
+    public static final int FISH_SHOP = 13;
+    public static final int CLOTHES_SILK_SHOP = 14;
+    public static final int ARMOURY_SHOP = 15;
+    public static final int FUR_SHOP = 16;
+    public static final int TEA_SHOP = 17;
 }

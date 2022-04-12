@@ -80,6 +80,10 @@ public class NPC extends Mobile {
 	 * Is this {@link NPC} a pet?
 	 */
 	private boolean pet;
+	/**
+	 * Can this NPC use advanced path finding when following its target?
+	 */
+	private boolean canUsePathFinding;
 	
 	/**
 	 * Creates a new {@link NPC}.
@@ -169,7 +173,14 @@ public class NPC extends Mobile {
      * @return
      */
     public boolean canUsePathFinding() {
-	    return false;
+	    return this.canUsePathFinding;
+	}
+
+	/**
+	 * Set whether this NPC can use pathfinding when following its target
+	 */
+	public void setCanUsePathFinding(boolean canUsePathFinding) {
+		this.canUsePathFinding = canUsePathFinding;
 	}
 
 	/**

@@ -174,27 +174,7 @@ public class ShopManager extends ShopIdentifiers {
         player.getPacketSender().sendMessage(message);
     }
 
-    public static void buyItem(Player player, int slot, int itemId, int amount) {
-
-        // Get the shop..
-        Shop shop = player.getShop();
-
-        // First, we will attempt to verify the shop and the item.
-        boolean flag = false;
-
-        if (shop == null || player.getStatus() != PlayerStatus.SHOPPING
-                || player.getInterfaceId() != Shop.INTERFACE_ID) {
-            flag = true;
-        } else if (slot >= player.getShop().getCurrentStock().length || player.getShop().getCurrentStock()[slot] == null
-                || player.getShop().getCurrentStock()[slot].getId() != itemId) {
-            flag = true;
-        }
-
-        // Check if we failed the verification.
-        if (flag) {
-            return;
-        }
-
+    public static void buyItem(Player player, Shop shop, int slot, int itemId, int amount) {
         // Max buy limit..
         if (amount > 5000) {
             player.getPacketSender().sendMessage("You can only buy a maximum of 5000 at a time.");
@@ -300,6 +280,30 @@ public class ShopManager extends ShopIdentifiers {
                 shop.setRestocking(true);
             }
         }
+    }
+
+    public static void buyItem(Player player, int slot, int itemId, int amount) {
+
+        // Get the shop..
+        Shop shop = player.getShop();
+
+        // First, we will attempt to verify the shop and the item.
+        boolean flag = false;
+
+        if (shop == null || player.getStatus() != PlayerStatus.SHOPPING
+                || player.getInterfaceId() != Shop.INTERFACE_ID) {
+            flag = true;
+        } else if (slot >= player.getShop().getCurrentStock().length || player.getShop().getCurrentStock()[slot] == null
+                || player.getShop().getCurrentStock()[slot].getId() != itemId) {
+            flag = true;
+        }
+
+        // Check if we failed the verification.
+        if (flag) {
+            return;
+        }
+
+        ShopManager.buyItem(player, shop, slot, itemId, amount);
     }
 
     public static void sellItem(Player player, int slot, int itemId, int amount) {
@@ -477,6 +481,8 @@ public class ShopManager extends ShopIdentifiers {
                 return "blood money";
             case POINTS_SHOP:
                 return "points";
+            case ZOMBIES_HEALTH_SHOP:
+                return "ecto tokens";
         }
 
         return "coins";
@@ -496,6 +502,8 @@ public class ShopManager extends ShopIdentifiers {
                 return player.getPoints();
             case PVP_SHOP:
                 return player.getInventory().getAmount(ItemIdentifiers.BLOOD_MONEY);
+            case ZOMBIES_HEALTH_SHOP:
+                return player.getInventory().getAmount(ItemIdentifiers.ECTO_TOKEN);
             default:
                 return player.getInventory().getAmount(ItemIdentifiers.COINS);
         }
@@ -515,6 +523,9 @@ public class ShopManager extends ShopIdentifiers {
                 break;
             case PVP_SHOP:
                 player.getInventory().delete(ItemIdentifiers.BLOOD_MONEY, amount);
+                break;
+            case ZOMBIES_HEALTH_SHOP:
+                player.getInventory().delete(ItemIdentifiers.ECTO_TOKEN, amount);
                 break;
             default:
                 player.getInventory().delete(ItemIdentifiers.COINS, amount);
@@ -538,6 +549,9 @@ public class ShopManager extends ShopIdentifiers {
                 break;
             case PVP_SHOP:
                 player.getInventory().add(ItemIdentifiers.BLOOD_MONEY, amount);
+                break;
+            case ZOMBIES_HEALTH_SHOP:
+                player.getInventory().add(ItemIdentifiers.ECTO_TOKEN, amount);
                 break;
             default:
                 player.getInventory().add(ItemIdentifiers.COINS, amount);

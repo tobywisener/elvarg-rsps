@@ -5,6 +5,7 @@ import com.elvarg.game.collision.Region;
 import com.elvarg.game.World;
 import com.elvarg.game.collision.RegionManager;
 import com.elvarg.game.content.ArmorAnimator;
+import com.elvarg.game.content.combat.FightStyle;
 import com.elvarg.game.content.minigames.FightCaves;
 import com.elvarg.game.content.skill.skillable.impl.Smithing;
 import com.elvarg.game.content.skill.skillable.impl.Smithing.Bar;
@@ -28,6 +29,8 @@ import com.elvarg.game.model.MagicSpellbook;
 import com.elvarg.game.model.Skill;
 import com.elvarg.game.model.areas.impl.CombatRingArea;
 import com.elvarg.game.model.areas.impl.PrivateArea;
+import com.elvarg.game.model.container.shop.Shop;
+import com.elvarg.game.model.container.shop.ShopManager;
 import com.elvarg.game.model.dialogues.entries.impl.StatementDialogue;
 import com.elvarg.game.model.movement.WalkToAction;
 import com.elvarg.game.model.rights.PlayerRights;
@@ -40,8 +43,10 @@ import com.elvarg.game.task.impl.TimedObjectReplacementTask;
 import com.elvarg.net.packet.Packet;
 import com.elvarg.net.packet.PacketConstants;
 import com.elvarg.net.packet.PacketExecutor;
+import com.elvarg.util.ItemIdentifiers;
 import com.elvarg.util.Misc;
 import com.elvarg.util.ObjectIdentifiers;
+import com.elvarg.util.ShopIdentifiers;
 import org.apache.commons.lang.ArrayUtils;
 
 import static com.elvarg.game.entity.impl.object.ObjectManager.OperationType.DESPAWN;
@@ -93,10 +98,6 @@ public class ObjectActionPacketListener extends ObjectIdentifiers implements Pac
             ObjectManager.deregister(object, true);
             ObjectManager.register(obj, true);
 
-
-
-
-
             return;
         }
 
@@ -106,6 +107,11 @@ public class ObjectActionPacketListener extends ObjectIdentifiers implements Pac
         }
 
         switch (object.getId()) {
+
+            case BANDAGES_TABLE:
+                ShopManager.open(player, ShopIdentifiers.ZOMBIES_HEALTH_SHOP);
+                break;
+
             case CHEST:
                 StatementDialogue.send(player, "You need a Crystal Key to open this chest.");
                 break;
@@ -224,6 +230,22 @@ public class ObjectActionPacketListener extends ObjectIdentifiers implements Pac
         }
 
         switch (object.getId()) {
+            case BANDAGES_TABLE:
+                ShopManager.buyItem(player, ShopManager.shops.get(ShopIdentifiers.ZOMBIES_HEALTH_SHOP), 0, ItemIdentifiers.ECTO_TOKEN, 5);
+                break;
+            case DUMMY:
+                final var attackStyle = player.getFightType().getStyle();
+                switch(attackStyle) {
+                    case ACCURATE:
+                        break;
+                    case CONTROLLED:
+                        break;
+                    case AGGRESSIVE:
+                        break;
+                    case DEFENSIVE:
+                        break;
+                }
+                break;
             case FLAX:
             case FLAX_2:
             case FLAX_3:

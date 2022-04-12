@@ -1236,7 +1236,11 @@
 		 {
             "id":1725,
             "amount":2000000000
-         }
+         },
+         { "id":1381, "amount":2000000000 },
+         { "id":1383, "amount":2000000000 },
+         { "id":1385, "amount":2000000000 },
+         { "id":1387, "amount":2000000000 }
 	  ]
 	},
 	{
@@ -1479,6 +1483,32 @@
       "id": 15,
       "name": "Armoury Store",
       "originalStock": [
+         { "name": "Bronze", "id":1321, "amount":1000 },
+         { "id": 1351, "amount": 1000 },
+         { "id": 1265, "amount": 1000 },
+
+         { "name": "Iron", "id":1323, "amount":500 },
+         { "id": 1349, "amount": 1000 },
+         { "id": 1267, "amount": 1000 },
+
+         { "name": "Steel", "id":1325, "amount":1000 },
+         { "id": 1353, "amount": 1000 },
+         { "id": 1269, "amount": 1000 },
+
+         { "name": "Black", "id":1327, "amount":1000 },
+         { "id": 1361, "amount": 1000 },
+
+         { "name": "Mithril", "id":1329, "amount":1000 },
+         { "id": 1355, "amount": 1000 },
+         { "id": 1273, "amount": 1000 },
+
+         { "name": "Adamant", "id":1331, "amount":1000 },
+         { "id": 1357, "amount": 1000 },
+         { "id": 1271, "amount": 1000 },
+
+         { "name": "Rune", "id":1333, "amount":100 },
+         { "id": 1359, "amount": 100 },
+         { "id": 1275, "amount": 100 }
       ]
    },
    {
@@ -1491,6 +1521,16 @@
       "id": 17,
       "name": "Tea Store",
       "originalStock": [
+      ]
+   },
+   {
+      "id": 18,
+      "name": "Zombies - Health Store",
+      "originalStock": [
+         {
+            "id":4049,
+            "amount":2000000000
+         }
       ]
    }
 ]

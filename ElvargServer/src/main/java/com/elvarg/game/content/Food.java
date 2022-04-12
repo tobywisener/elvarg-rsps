@@ -8,6 +8,7 @@ import com.elvarg.game.model.Animation;
 import com.elvarg.game.model.Item;
 import com.elvarg.game.model.Priority;
 import com.elvarg.game.model.Skill;
+import com.elvarg.util.ItemIdentifiers;
 import com.elvarg.util.timers.TimerKey;
 
 /**
@@ -139,7 +140,7 @@ public class Food {
 		 */
 		KEBAB(new Item(1971), 4), CHEESE(new Item(1985), 4), CAKE(new Item(1891), 5), SECOND_CAKE_SLICE(new Item(1893),
 				5),
-		THIRD_CAKE_SLICE(new Item(1895), 5), BANDAGES(new Item(14640), 12), JANGERBERRIES(new Item(247),
+		THIRD_CAKE_SLICE(new Item(1895), 5), JANGERBERRIES(new Item(247),
 						2),
 		WORM_CRUNCHIES(new Item(2205), 7), EDIBLE_SEAWEED(new Item(403), 4), ANCHOVIES(
 								new Item(319),
@@ -162,7 +163,6 @@ public class Food {
 		/*
 		 * Baked goods food types a player can make with the cooking skill.
 		 */
-
 		MEAT(new Item(2142), 3), CHICKEN(new Item(2140), 3), POTATO(new Item(1942), 1), BAKED_POTATO(new Item(6701), 4), POTATO_WITH_BUTTER(new Item(6703), 14),
 		CHILLI_POTATO(new Item(7054), 14), EGG_POTATO(new Item(7056), 16), POTATO_WITH_CHEESE(new Item(6705), 16),
 		MUSHROOM_POTATO(new Item(7058), 20), TUNA_POTATO(new Item(7060), 20), BREAD(new Item(2309), 5), CHOCOLATE_SLICE(new Item(1901), 5),
@@ -178,7 +178,8 @@ public class Food {
 		/*
 		 * Other food types.
 		 */
-		PURPLE_SWEETS(new Item(4561), 3);
+		PURPLE_SWEETS(new Item(4561), 3),
+		BANDAGES(new Item(ItemIdentifiers.BANDAGES), 10);
 
 		static Map<Integer, Edible> types = new HashMap<Integer, Edible>();
 

@@ -380,8 +380,12 @@ public final class MovementQueue {
             return;
         }
 
+		boolean targetVisible = character.isNpc() ? character.getLocation().isViewableFrom(following.getLocation(), character.getAsNpc().getDefinition().getCombatFollowDistance())
+				:
+				character.getLocation().isViewableFrom(following.getLocation());
+
         // If we're way too far away from eachother, simply reset following completely.
-        if (!character.getLocation().isViewableFrom(following.getLocation()) || !following.isRegistered() || following.getPrivateArea() != character.getPrivateArea()) {
+        if (!targetVisible || !following.isRegistered() || following.getPrivateArea() != character.getPrivateArea()) {
 
             boolean reset = true;
 
@@ -389,6 +393,7 @@ public final class MovementQueue {
             // when they're too far away.
             if (character.isNpc()) {
                 NPC npc = character.getAsNpc();
+
                 if (npc.isPet()) {
                     npc.setVisible(false);                    
                     List<Location> tiles = new ArrayList<>();

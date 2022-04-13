@@ -85,6 +85,8 @@ public class NpcDefinition {
         return retreats;
     }
 
+    public void setDoesRetreat(boolean retreats) { this.retreats = retreats; }
+
     public boolean isAggressive() {
         return aggressive;
     }
@@ -96,6 +98,8 @@ public class NpcDefinition {
     public int getRespawn() {
         return respawn;
     }
+
+    public void setRespawn(int respawn) { this.respawn = respawn; }
 
     public int getMaxHit() {
         return maxHit;
@@ -135,5 +139,9 @@ public class NpcDefinition {
 
     public int getCombatFollowDistance() {
         return combatFollowDistance;
+    }
+
+    public void setCombatFollowDistance(int distance) {
+        this.combatFollowDistance = distance;
     }
 }

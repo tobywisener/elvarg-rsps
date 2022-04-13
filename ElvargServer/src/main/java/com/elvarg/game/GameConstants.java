@@ -71,8 +71,8 @@ public class GameConstants {
 	/**
 	 * Multiplies the experience gained.
 	 */
-	public static final double COMBAT_SKILLS_EXP_MULTIPLIER = 6;
-	public static final double REGULAR_SKILLS_EXP_MULTIPLIER = 18;
+	public static final double COMBAT_SKILLS_EXP_MULTIPLIER = 60;
+	public static final double REGULAR_SKILLS_EXP_MULTIPLIER = 14;
 
 	/**
 	 * The gameframe's tab interface ids.

@@ -21,4 +21,5 @@ public class ShopIdentifiers {
     public static final int ARMOURY_SHOP = 15;
     public static final int FUR_SHOP = 16;
     public static final int TEA_SHOP = 17;
+    public static final int ZOMBIES_HEALTH_SHOP = 18;
 }

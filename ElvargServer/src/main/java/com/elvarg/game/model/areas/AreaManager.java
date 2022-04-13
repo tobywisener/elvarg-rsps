@@ -22,6 +22,7 @@ public class AreaManager {
         areas.add(new KingBlackDragonArea());
         areas.add(new GodwarsDungeonArea());
         areas.add(new CombatRingArea());
+        areas.add(new ZombiesArea());
     }
 
     /**

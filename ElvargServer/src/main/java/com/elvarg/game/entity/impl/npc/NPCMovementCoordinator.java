@@ -39,10 +39,8 @@ public class NPCMovementCoordinator {
         // If walk radius is 0, that means the npc shouldn't walk around.
         // HOWEVER: Only if npc is home. Because the npc might be retreating
         // from a fight.
-        if (radius == 0) {
-            if (coordinateState == CoordinateState.HOME) {
-                return;
-            }
+        if (radius == 0 && coordinateState == CoordinateState.HOME) {
+            return;
         }
         
         if (!npc.getMovementQueue().canMove()) {
@@ -169,19 +167,19 @@ public class NPCMovementCoordinator {
         int spawnX = npc.getSpawnPosition().getX();
         int spawnY = npc.getSpawnPosition().getY();
         if (x == 1) {
-            if (npc.getLocation().getX() + x > spawnX + 1)
+            if (npc.getLocation().getX() + x > spawnX + radius)
                 return null;
         }
         if (x == -1) {
-            if (npc.getLocation().getX() - x < spawnX - 1)
+            if (npc.getLocation().getX() - x < spawnX - radius)
                 return null;
         }
         if (y == 1) {
-            if (npc.getLocation().getY() + y > spawnY + 1)
+            if (npc.getLocation().getY() + y > spawnY + radius)
                 return null;
         }
         if (y == -1) {
-            if (npc.getLocation().getY() - y < spawnY - 1)
+            if (npc.getLocation().getY() - y < spawnY - radius)
                 return null;
         }
         return new Location(x, y);

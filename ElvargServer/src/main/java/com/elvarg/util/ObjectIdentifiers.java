@@ -2491,7 +2491,7 @@ public class ObjectIdentifiers {
     public static final int CAVE_WALL = 4448;
     public static final int STAIRCASE_19 = 4449;
     public static final int STAIRCASE_20 = 4450;
-    public static final int TABLE_41 = 4458;
+    public static final int BANDAGES_TABLE = 4458;
     public static final int TABLE_42 = 4459;
     public static final int TABLE_43 = 4460;
     public static final int TABLE_44 = 4461;

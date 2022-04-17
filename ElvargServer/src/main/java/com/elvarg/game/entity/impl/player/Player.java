@@ -230,8 +230,7 @@ public class Player extends Mobile {
 	/**
 	 * Armor Animator Settings
 	 */
-
-	private boolean isAnimated;
+	private boolean fightingAnimatedArmor;
 	
 	/**
 	 * Creates this player.
@@ -681,6 +680,8 @@ public class Player extends Mobile {
 		getPacketSender().sendSpecialAttackState(false);
 		setUntargetable(false);
 		isDying = false;
+		setIsFightingAnimatedArmor(false);
+		hasUsedPreset = false;
 
 		getUpdateFlag().flag(Flag.APPEARANCE);
 	}
@@ -1621,7 +1622,7 @@ public class Player extends Mobile {
         this.autoRetaliate = autoRetaliate;
     }
 
-	public boolean getIsAnimated(){ return this.isAnimated;}
+	public boolean getIsFightingAnimatedArmor(){ return this.fightingAnimatedArmor;}
 
-	public void setIsAnimated(boolean set){ this.isAnimated = set;}
+	public void setIsFightingAnimatedArmor(boolean set){ this.fightingAnimatedArmor = set;}
 }

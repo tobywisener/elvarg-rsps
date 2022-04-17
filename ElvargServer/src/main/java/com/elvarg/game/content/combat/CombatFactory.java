@@ -387,6 +387,7 @@ public class CombatFactory {
 
 		if(target.isNpc() && target.getAsNpc().getId() == NpcIdentifiers.ZOMBIE_85){
 			if(method == CombatFactory.MELEE_COMBAT){
+				attacker.getAsPlayer().getPacketSender().sendMessage("You can only use ranged or maged attacks on this monster!");
 				return false;
 			}
 		}

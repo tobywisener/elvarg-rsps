@@ -5,7 +5,6 @@ import com.elvarg.game.entity.impl.npc.NPC;
 import com.elvarg.game.entity.impl.npc.NPCDropGenerator;
 import com.elvarg.game.entity.impl.player.Player;
 import com.elvarg.game.model.Location;
-import com.elvarg.game.model.areas.impl.FightCavesArea;
 
 public class AnimatedArmor extends NPC {
 
@@ -13,7 +12,7 @@ public class AnimatedArmor extends NPC {
         super(id, position);
         setOwner(player);
         setHeadIcon(2);
-        player.setIsAnimated(true);
+        player.setIsFightingAnimatedArmor(true);
         setMobileInteraction(player);
         setFollowing(player);
     }
@@ -34,7 +33,7 @@ public class AnimatedArmor extends NPC {
     @Override
     public void appendDeath() {
         Player player = this.getOwner();
-        player.setIsAnimated(false);
+        player.setIsFightingAnimatedArmor(false);
         World.getRemoveNPCQueue().add(this);
         NPCDropGenerator.start(player, this);
     }

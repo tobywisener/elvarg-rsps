@@ -266,6 +266,7 @@ public class ObjectActionPacketListener extends ObjectIdentifiers implements Pac
             //DialogueManager.sendStatement(player, "Construction will be avaliable in the future.");
             break;
         case FURNACE_18:
+        case FURNACE_12:
             for (Bar bar : Smithing.Bar.values()) {
                 player.getPacketSender().sendInterfaceModel(bar.getFrame(), bar.getBar(), 150);
             }

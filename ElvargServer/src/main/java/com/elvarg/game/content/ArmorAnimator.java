@@ -13,7 +13,7 @@ public class ArmorAnimator {
     private static final Location ARMOR_SPAWN_POS = new Location(3807, 2835);
 
     public static void animateArmor(Player player){
-        int level = player.getSkillManager().getTotalLevel();
+        int level = player.getSkillManager().getCombatLevel();
         int npcId;
         if(!checkAll(player))
             return;
@@ -50,7 +50,7 @@ public class ArmorAnimator {
             player.getPacketSender().sendMessage("You cannot do that right now.");
             return false;
         }
-        return !player.getIsAnimated();
+        return !player.getIsFightingAnimatedArmor();
     }
 
 }

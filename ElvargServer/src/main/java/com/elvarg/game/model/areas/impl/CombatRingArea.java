@@ -87,11 +87,14 @@ public class CombatRingArea extends Area {
             return;
         }
 
-        character.getAsPlayer().getPacketSender()
-                .sendMessage("You enter the combat ring.");
+        Player player = character.getAsPlayer();
+
+        player.getPacketSender()
+                .sendMessage("You enter the combat ring. Check the quest tab for presets.");
+
+        player.getPacketSender().sendTabInterface(2, 31000 /* Presets on quest tab */);
 
         // TODO: If there's no players in the combat ring, spawn a PVP bot
-
     }
 
     @Override
@@ -102,16 +105,17 @@ public class CombatRingArea extends Area {
 
         Player player = character.getAsPlayer();
 
-        player.getPacketSender()
-                .sendMessage("You leave the combat ring. You feel your skills restore to normal.");
+        player.getPacketSender().sendTabInterface(2, 638 /* Quests on quest tab */);
 
         player.getRealSkillManager().refreshSkills();
 
         if (player.hasUsedPreset) {
-            // If the player has used a preset, reset their items
-            player.getInventory().resetItems().refreshItems();
-            player.getEquipment().resetItems().refreshItems();
-            player.getUpdateFlag().flag(Flag.APPEARANCE);
+            // If the player has used a preset, give them a reset
+            player.getInventory().resetItems();
+            player.getEquipment().resetItems();
+            player.resetAttributes();
+
+            player.getPacketSender().sendMessage("You leave the combat ring. You feel your skills restore to normal.");
         }
     }
 

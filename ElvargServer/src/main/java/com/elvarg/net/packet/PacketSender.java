@@ -97,7 +97,7 @@ public class PacketSender {
 		player.getSession().write(out);
 		return this;
 	}
-	
+
 	public PacketSender sendTeleportInterface(int menu) {
 		player.setTeleportInterfaceOpen(true);
 		PacketBuilder out = new PacketBuilder(183);
@@ -105,19 +105,19 @@ public class PacketSender {
 		player.getSession().write(out);
 		return this;
 	}
-	
+
 	public PacketSender sendCreationMenu(CreationMenu menu) {
-	    player.setCreationMenu(menu);
-	    sendString(31104, menu.getTitle());
-        PacketBuilder out = new PacketBuilder(167);
-        out.put(menu.getItems().size());
-        for (int itemId : menu.getItems()) {
-            out.putInt(itemId);
-        }
-        player.getSession().write(out);
-        return this;
-    }
-	
+		player.setCreationMenu(menu);
+		sendString(31104, menu.getTitle());
+		PacketBuilder out = new PacketBuilder(167);
+		out.put(menu.getItems().size());
+		for (int itemId : menu.getItems()) {
+			out.putInt(itemId);
+		}
+		player.getSession().write(out);
+		return this;
+	}
+
 	public PacketSender sendSpecialAttackState(boolean active) {
 		PacketBuilder out = new PacketBuilder(186);
 		out.put(active ? 1 : 0);
@@ -191,7 +191,7 @@ public class PacketSender {
 		player.getSession().write(out);
 		return this;
 	}
-	
+
 	public PacketSender sendPoisonType(int type) {
 		player.getSession().write(new PacketBuilder(184).put(type));
 		return this;
@@ -510,7 +510,7 @@ public class PacketSender {
 	}
 
 	public PacketSender sendCameraShake(int verticalAmount, int verticalSpeed, int horizontalAmount,
-			int horizontalSpeed) {
+										int horizontalSpeed) {
 		PacketBuilder out = new PacketBuilder(35);
 		out.put(verticalAmount);
 		out.put(verticalSpeed);
@@ -682,10 +682,9 @@ public class PacketSender {
 	public PacketSender sendSmithingData(int id, int slot, int interfaceId, int amount) {
 		PacketBuilder out = new PacketBuilder(34, PacketType.VARIABLE_SHORT);
 		out.putShort(interfaceId);
-		out.put(4);
-		out.putInt(slot);
+		out.put(slot);
+		out.putInt(amount);
 		out.putShort(id + 1);
-		out.put(amount);
 		player.getSession().write(out);
 		return this;
 	}
@@ -723,7 +722,7 @@ public class PacketSender {
 		player.getSession().write(out);
 		return this;
 	}
-	
+
 	public PacketSender clearInterfaceItems(int start, int end) {
 		PacketBuilder out = new PacketBuilder(112);
 		out.putInt(start);
@@ -981,18 +980,18 @@ public class PacketSender {
 	}
 
 	public PacketSender sendProjectile(Location start, Location end, int offset, int speed, int projectileId,
-			int startHeight, int endHeight, Mobile lockon, int delay) {
+									   int startHeight, int endHeight, Mobile lockon, int delay) {
 		sendPosition(start);
 		PacketBuilder out = new PacketBuilder(117);
 		out.put(offset);
 		out.put((end.getX() - start.getX()));
-		out.put((end.getY() - start.getY()));		
-        if (lockon != null) {
-            out.putShort(lockon.isPlayer() ? -(lockon.getIndex() + 1) : lockon.getIndex() + 1);
-        } else {
-            out.putShort(0);
-        }
-        out.putShort(projectileId);
+		out.put((end.getY() - start.getY()));
+		if (lockon != null) {
+			out.putShort(lockon.isPlayer() ? -(lockon.getIndex() + 1) : lockon.getIndex() + 1);
+		} else {
+			out.putShort(0);
+		}
+		out.putShort(projectileId);
 		out.put(startHeight);
 		out.put(endHeight);
 		out.putShort(delay);
@@ -1056,7 +1055,7 @@ public class PacketSender {
 	 * bldr.putString(""+val+""); } } } } } else { bldr.putString("null"); //Resets
 	 * map construction sequence } player.getSession().queueMessage(bldr); return
 	 * this; }
-	 * 
+	 *
 	 * public PacketSender sendConstructionInterfaceItems(ArrayList<Furniture>
 	 * items) { PacketBuilder builder = new PacketBuilder(53, PacketType.VARIABLE_SHORT);
 	 * builder.putShort(38274); builder.putShort(items.size()); for (int i = 0; i <

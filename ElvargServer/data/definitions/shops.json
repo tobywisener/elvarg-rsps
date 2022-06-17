@@ -3,7 +3,44 @@
       "id": 0,
       "name": "General Store",
       "originalStock":[
-	  ]
+         {
+            "id":2347,
+            "amount":2000000000
+         },
+         {
+            "id":7156,
+            "amount":2000000000
+         },
+         {
+            "id":1351,
+            "amount":2000000000
+         },
+         {
+            "id":1265,
+            "amount":2000000000
+         },
+         {
+            "id":303,
+            "amount":2000000000
+         },
+         {
+            "id":305,
+            "amount":2000000000
+         },
+         {
+            "id":307,
+            "amount":2000000000,
+            "desc": "Fishing rod"
+         },
+         {
+            "id":313,
+            "amount":2000000000
+         },
+         {
+            "id":311,
+            "amount":2000000000
+         }
+      ]
 	},
    {
       "id":1,
@@ -1552,6 +1589,23 @@
       "id": 13,
       "name": "Fish Store",
       "originalStock": [
+         { "id": 317, "amount": 100 },
+         { "id": 321, "amount": 100 },
+         { "id": 327, "amount": 100 },
+         { "id": 331, "amount": 100 },
+         { "id": 335, "amount": 100 },
+         { "id": 327, "amount": 100 },
+         { "id": 341, "amount": 100 },
+         { "id": 327, "amount": 100 },
+         { "id": 349, "amount": 100 },
+         { "id": 327, "amount": 100 },
+         { "id": 359, "amount": 100 },
+         { "id": 371, "amount": 100 },
+         { "id": 327, "amount": 100 },
+         { "id": 377, "amount": 50 },
+         { "id": 383, "amount": 0 },
+         { "id": 389, "amount": 0 },
+         { "id": 395, "amount": 0 }
       ]
    },
    {

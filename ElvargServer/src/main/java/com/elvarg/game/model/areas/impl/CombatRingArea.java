@@ -94,6 +94,9 @@ public class CombatRingArea extends Area {
 
         player.getPacketSender().sendTabInterface(2, 31000 /* Presets on quest tab */);
 
+        player.getTempSkillManager().refreshSkills();
+        player.resetAttributes();
+
         // TODO: If there's no players in the combat ring, spawn a PVP bot
     }
 

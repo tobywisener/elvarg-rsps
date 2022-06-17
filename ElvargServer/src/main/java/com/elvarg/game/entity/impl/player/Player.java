@@ -294,14 +294,13 @@ public class Player extends Mobile {
 		if (isDying) {
 			return this;
 		}
-
 		if (infiniteHealth) {
-			if (skillManager.getCurrentLevel(Skill.HITPOINTS) > hitpoints) {
+			if (getSkillManager().getCurrentLevel(Skill.HITPOINTS) > hitpoints) {
 				return this;
 			}
 		}
 
-		skillManager.setCurrentLevel(Skill.HITPOINTS, hitpoints);
+		getSkillManager().setCurrentLevel(Skill.HITPOINTS, hitpoints);
 		packetSender.sendSkill(Skill.HITPOINTS);
 		if (getHitpoints() <= 0 && !isDying)
 			appendDeath();
@@ -310,28 +309,28 @@ public class Player extends Mobile {
 
 	@Override
 	public void heal(int amount) {
-		int level = skillManager.getMaxLevel(Skill.HITPOINTS);
-		if ((skillManager.getCurrentLevel(Skill.HITPOINTS) + amount) >= level) {
+		int level = getSkillManager().getMaxLevel(Skill.HITPOINTS);
+		if ((getSkillManager().getCurrentLevel(Skill.HITPOINTS) + amount) >= level) {
 			setHitpoints(level);
 		} else {
-			setHitpoints(skillManager.getCurrentLevel(Skill.HITPOINTS) + amount);
+			setHitpoints(getSkillManager().getCurrentLevel(Skill.HITPOINTS) + amount);
 		}
 	}
 
 	@Override
 	public int getBaseAttack(CombatType type) {
 		if (type == CombatType.RANGED)
-			return skillManager.getCurrentLevel(Skill.RANGED);
+			return getSkillManager().getCurrentLevel(Skill.RANGED);
 		else if (type == CombatType.MAGIC)
-			return skillManager.getCurrentLevel(Skill.MAGIC);
-		return skillManager.getCurrentLevel(Skill.ATTACK);
+			return getSkillManager().getCurrentLevel(Skill.MAGIC);
+		return getSkillManager().getCurrentLevel(Skill.ATTACK);
 	}
 
 	@Override
 	public int getBaseDefence(CombatType type) {
 		if (type == CombatType.MAGIC)
-			return skillManager.getCurrentLevel(Skill.MAGIC);
-		return skillManager.getCurrentLevel(Skill.DEFENCE);
+			return getSkillManager().getCurrentLevel(Skill.MAGIC);
+		return getSkillManager().getCurrentLevel(Skill.DEFENCE);
 	}
 
 	@Override

@@ -16,6 +16,7 @@ import com.elvarg.game.content.skill.skillable.impl.Woodcutting;
 import com.elvarg.game.content.skill.skillable.impl.Woodcutting.Tree;
 import com.elvarg.game.entity.impl.object.GameObject;
 import com.elvarg.game.entity.impl.player.Player;
+import com.elvarg.game.entity.impl.player.PlayerSaving;
 import com.elvarg.game.model.Flag;
 import com.elvarg.game.model.Graphic;
 import com.elvarg.game.model.Item;
@@ -243,6 +244,7 @@ public class SkillManager {
 			player.getUpdateFlag().flag(Flag.APPEARANCE);
 		}
 		updateSkill(skill);
+		//PlayerSaving.save(player);
 		return this;
 	}
 

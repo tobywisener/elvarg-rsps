@@ -50,11 +50,11 @@ public class AreaManager {
             }
         }
 
-
+        Area enteredArea = null;
         if (area == null) {
             area = get(position);
             if (area != null) {
-                area.enter(c);
+                enteredArea = area;
             }
         }
 
@@ -80,6 +80,11 @@ public class AreaManager {
 
         // Update area..
             c.setArea(area);
+
+        if (enteredArea != null) {
+            // Now that the player's area has been fully updated, call enter on the new area
+            enteredArea.enter(c);
+        }
 
         if (exitedArea != null) {
             // Now that the player's area has been fully updated, call leave on the previous one

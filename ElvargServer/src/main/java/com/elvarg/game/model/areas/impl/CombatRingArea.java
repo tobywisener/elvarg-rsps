@@ -94,6 +94,9 @@ public class CombatRingArea extends Area {
 
         player.getPacketSender().sendTabInterface(2, 31000 /* Presets on quest tab */);
 
+        // Copy the players current permanent skills to their temporary skills (so they dont appear to lose any levels)
+        player.getTempSkillManager().cloneSkills(player.getRealSkillManager());
+
         player.getTempSkillManager().refreshSkills();
         player.resetAttributes();
 

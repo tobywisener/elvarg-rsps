@@ -706,6 +706,14 @@ public class SkillManager {
 		this.skills = skills;
 	}
 
+	public void cloneSkills(SkillManager _skillManager) {
+		for (Skill skill : Skill.values()) {
+			int level = _skillManager.getCurrentLevel(skill);
+			this.setCurrentLevel(skill, level).setMaxLevel(skill, level)
+					.setExperience(skill, SkillManager.getExperienceForLevel(level));
+		}
+	}
+
 	public class Skills {
 
 		private int[] level, maxLevel, experience;

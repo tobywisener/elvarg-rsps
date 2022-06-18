@@ -244,7 +244,7 @@ public class SkillManager {
 			player.getUpdateFlag().flag(Flag.APPEARANCE);
 		}
 		updateSkill(skill);
-		//PlayerSaving.save(player);
+		PlayerSaving.save(player);
 		return this;
 	}
 
